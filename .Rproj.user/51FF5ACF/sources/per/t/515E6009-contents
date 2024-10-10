@@ -11,8 +11,7 @@ head(data_overall)
 ```
 
 ```{r}
-# Filter the dataset to include only four countries.
-
+# Filter the dataset to include only the three countries chosen by your group.
 data_overall_mini <- data_overall %>% 
   filter(Entity %in% c("Ghana", "China","Ethiopia","India"))
 ```
@@ -34,7 +33,7 @@ data_overall_wide <- data_overall_mini %>%
     values_from = `DALYs (Disability-Adjusted Life Years) - All causes - Sex: Both - Age: Age-standardized (Rate)`
   )
 
-#Remove code column
+#Remove code colomn
 data_overall_wide1 <- subset(data_overall_wide, select = -Code)
 
 # Rename columns
@@ -43,6 +42,10 @@ data_overall_wide1 <- rename(data_overall_wide1,
                              `DALY/Ethiopia` = Ethiopia, 
                              `DALY/Ghana` = Ghana, 
                              `DALY/India` = India)
+
+# Replace all NA values with 0
+
+data_overall_wide1 <- data_overall_wide1 %>% mutate_all(~replace(., is.na(.), 0))
 
 
 kable(data_overall_wide1)
@@ -61,22 +64,21 @@ kable(data_overall_wide1)
 
 library(ggplot2)
 
-plote_data_mini <- ggplot(data_overall_mini, aes(x=Year, y=`DALYs (Disability-Adjusted Life Years) - All causes - Sex: Both - Age: Age-standardized (Rate)`, colour = Entity, group=Entity))+
-  geom_line(aes(linewidth = 1))+
+plote_data_mini <- ggplot(data_overall_mini, aes(x=Entity, y=`DALYs (Disability-Adjusted Life Years) - All causes - Sex: Both - Age: Age-standardized (Rate)`))+
+  geom_line(aes(group=1))+
   labs(
     title = "Disability-Adjusted Life Years (DALYs) by Entity",
-    x = "Year",
+    x = "Entity",
     y = "DALYs (Age-standardized Rate)"
   ) +
-  theme_minimal()
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 plot(plote_data_mini)
 
 
 ```
-```
 
 ## Summary of Overall Disease Burden Findings
 
-China has the lowest DALY overtime and Ethiopia recorded the highest DALY overtime. 
-It is also observed that all the four country's DALY declined steadily overtime with Ethiopia having the steepest decline.
+Provide a brief analysis based on the data presented in the table and chart. Highlight any significant findings or patterns. About 3 sentences.
