@@ -1,5 +1,3 @@
-# Non-Communicable Disease Burden (NCD)
-
 ```{r}
 # Load necessary packages
 pacman::p_load(tidyverse, knitr, here)
@@ -10,16 +8,33 @@ data_ncd <- read_csv(here("data/burden-of-disease-ncd.csv"))
 
 ```{r}
 # Filter the dataset to include only the three countries chosen by your group.
-data_ncd_mini <- "WRITE_YOUR_CODE_HERE"
+data_ncd_mini <- data_ncd %>%
+  filter(Entity %in% c("India","China", "Ghana","Ethiopia"))
 ```
+
+# Non-Communicable Disease Burden (NCD)： India,China,Ghana, Ethiopia
 
 ## Table of Estimates for NCD Burden Over Time
 
 ```{r}
 # Here render a table for the DALY burden over time for the three countries. 
-# You should pivot the data wider to show each country in a separate column.
-data_ncd_wide <- "WRITE_YOUR_CODE_HERE"
-# Use kable() from the knitr package to render the table.
+data_ncd_wide <- data_ncd_mini %>%
+  pivot_wider(names_from = Entity,
+             values_from = `DALYs (Disability-Adjusted Life Years) - Non-communicable diseases - Sex: Both - Age: Age-standardized (Rate)`, values_fill = list(`DALYs (Disability-Adjusted Life Years) - Non-communicable diseases - Sex: Both - Age: Age-standardized (Rate)` = 0))
+kable(data_ncd_wide)
+
+data_ncd_summary <- data_ncd_mini %>%
+  group_by(Code) %>%
+  summarise(
+    mean_DALY = mean(`DALYs (Disability-Adjusted Life Years) - Non-communicable diseases - Sex: Both - Age: Age-standardized (Rate)`),
+    median_DALY = median(`DALYs (Disability-Adjusted Life Years) - Non-communicable diseases - Sex: Both - Age: Age-standardized (Rate)`),
+    std_DALY = sd(`DALYs (Disability-Adjusted Life Years) - Non-communicable diseases - Sex: Both - Age: Age-standardized (Rate)`),
+    min_DALY = min(`DALYs (Disability-Adjusted Life Years) - Non-communicable diseases - Sex: Both - Age: Age-standardized (Rate)`),
+    max_DALY = max(`DALYs (Disability-Adjusted Life Years) - Non-communicable diseases - Sex: Both - Age: Age-standardized (Rate)`),
+    n_obs = n()
+  )
+kable(data_ncd_summary)
+
 ```
 
 ## Plot Showing Trends in NCD Burden Over Time
@@ -27,8 +42,17 @@ data_ncd_wide <- "WRITE_YOUR_CODE_HERE"
 ```{r}
 # Here, plot a line graph showing the trend of DALY burden for the chosen countries over time. You can use ggplot2 to create this plot. Each country's line should be a different color.
 # NOTE: Use your long 'mini' data frame for plotting, not the wide data used for the table. 
+
+ggplot(data_ncd_mini, aes(x = Year, y = `DALYs (Disability-Adjusted Life Years) - Non-communicable diseases - Sex: Both - Age: Age-standardized (Rate)`, color = Entity, group = Entity)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "DALY Burden Trend Over Time",
+       x = "Year",
+       y = "DALY Burden",
+       color = "Entity") +
+  theme_minimal()
 ```
 
 ## Summary of NCD Burden Findings
 
-Provide a brief analysis based on the data presented in the table and chart. Highlight any significant findings or patterns. About 3 sentences.
+Provide a brief analysis based on the data presented in the table and chart. Highlight any significant findings or patterns. About 3 sentences. 1 Table: data_ncd_summary shows that the largest mean_DALY is in India, the largest DALYs are found in Ethiopia 29898.41, and the smallest DALYs are found in China 18058.96 2 Figure: It can be seen that DALYs of all the five countries have shown a significant decline in 30 years, indicating an improvement in health status. The faster rate of decline is seen in Ethiopia and China and the slower change is seen in Ghana and India. 3 The mean and median DALYs of these four countries are very close to each other but differ in standard deviation, which reflects the dispersion of the data. Ethiopia's DALY value has the largest standard deviation, indicating that its data has the highest variability among the four countries. Ghana, on the other hand, has the smallest standard deviation of DALY values, indicating that its data are the most stable among the four countries.
