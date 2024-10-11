@@ -1,0 +1,4 @@
+"0","# Filter the dataset to include only four countries."
+"0",""
+"0","data_overall_mini <- data_overall %>% "
+"0","  filter(Entity %in% c(""Ghana"", ""China"",""Ethiopia"",""India""))"

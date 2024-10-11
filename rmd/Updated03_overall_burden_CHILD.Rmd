@@ -80,3 +80,4 @@ plot(plote_data_mini)
 
 China has the lowest DALY overtime and Ethiopia recorded the highest DALY overtime. 
 It is also observed that all the four country's DALY declined steadily overtime with Ethiopia having the steepest decline.
+And the highest DALY was recorded in 1990 by Ethiopia

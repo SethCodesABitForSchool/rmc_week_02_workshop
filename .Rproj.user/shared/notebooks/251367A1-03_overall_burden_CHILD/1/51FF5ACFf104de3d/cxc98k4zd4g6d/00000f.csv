@@ -1,0 +1,5 @@
+"0","# Filter the dataset to include only the three countries chosen by your group.
+data_overall_mini <- filter(Entity==""Ghana"", ""kenya"", ""Ethiopia"", ""India"")
+"
+"2","Error: object 'Entity' not found
+"
